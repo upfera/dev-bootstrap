@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: litellm_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: litellm_user
+      POSTGRES_PASSWORD: litellm_secure_password
+      POSTGRES_DB: litellm_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  litellm:
+    image: litellm/litellm:main-stable
+    container_name: litellm
+    network_mode: host
+    volumes:
+      - ./config.yaml:/app/config.yaml
+    env_file:
+      - .env
+    environment:
+      - DISABLE_AZURE_AD_AUTH=true
+      - DISABLE_MASTER_KEY_AUTH=true
+      - DATABASE_URL=postgresql://litellm_user:litellm_secure_password@127.0.0.1:5432/litellm_db
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

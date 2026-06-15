@@ -13,6 +13,9 @@ sudo apt install -y "$DEB"
 echo "🧹 Cleaning up..."
 rm -f "$DEB"
 
+echo "🔤 Installing fonts..."
+sudo apt install -y ttf-mscorefonts-installer
+
 echo "🔤 Setting up fontconfig..."
 mkdir -p ~/.config/fontconfig
 

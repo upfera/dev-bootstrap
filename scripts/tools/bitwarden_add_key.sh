@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export BW_SESSION
+BW_SESSION=$(bw unlock --raw)
+
 if [ -z "$1" ]; then
   echo "Usage: $0 <path-to-ssh-key>"
   exit 1
